@@ -1,11 +1,19 @@
-import { Component } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Document } from '../document.model';
 
 @Component({
   selector: 'app-document-item',
   standalone: true,
   templateUrl: './document-item.component.html',
-  styleUrl: './document-item.component.css'
+  styleUrls: ['./document-item.component.css']
+  // imports: [DocumentListComponent]
 })
-export class DocumentItemComponent {
 
+export class DocumentItemComponent {
+  @Input() document: Document;
+  @Output() selectedDocumentEvent = new EventEmitter<Document>();
+
+  onSelected() {
+    this.selectedDocumentEvent.emit(this.document);
+  }
 }

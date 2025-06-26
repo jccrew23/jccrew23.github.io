@@ -8,10 +8,16 @@
 // import { DocumentListComponent } from './documents/document-list/document-list.component';
 // import { DocumentItemComponent } from './documents/document-item/document-item.component';
 // import { DocumentDetailComponent } from './documents/document-detail/document-detail.component'; // Adjust path if needed
+// import { ContactsComponent } from './contacts/contacts.component';
 
 // @NgModule({
 //   declarations: [
 //     AppComponent,
+//     HeaderComponent,
+//     ContactsComponent,
+//     MessageListComponent,
+//     DocumentsComponent,
+//     DropdownDirective
 //   ],
 //   imports: [
 //     BrowserModule
