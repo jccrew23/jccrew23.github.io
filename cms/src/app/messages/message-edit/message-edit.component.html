@@ -1,6 +1,6 @@
 <div class="panel panel-default">
   <div class="panel-body">
-    <form id="document-edit">
+    <form id="document-edit" (submit)="onSendMessage(); $event.preventDefault()">
       <div class="row">
         <div class="col-sm-12 form-group">
           <label for="subject">Subject</label>
@@ -31,7 +31,6 @@
           <button
             class="btn btn-success"
             type="submit"
-            (click)="onSendMessage()"
           >
             Send
           </button>

@@ -3,6 +3,7 @@ import { DocumentDetailComponent } from './document-detail/document-detail.compo
 import { DocumentListComponent } from './document-list/document-list.component';
 import { Document } from './document.model';
 import { CommonModule } from '@angular/common';
+import { DocumentService } from './document.service';
 
 @Component({
   selector: 'app-documents',
@@ -13,5 +14,13 @@ import { CommonModule } from '@angular/common';
 })
 export class DocumentsComponent {
   selectedDocument!: Document;
+
+  constructor(private documentService: DocumentService) {
+    this.documentService.documentSelectedEvent.subscribe(
+      (document: Document) => {
+        this.selectedDocument = document;
+      }
+    );
+  }
 
 }

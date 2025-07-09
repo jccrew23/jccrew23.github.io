@@ -1,9 +1,9 @@
 import { Component, OnInit} from '@angular/core';
 import { ContactListComponent } from './contact-list/contact-list.component';
 import { ContactDetailComponent } from './contact-detail/contact-detail.component';
-
 import { Contact } from './contact.model';
 import { CommonModule } from '@angular/common';
+import { ContactService } from './contact.service';
 
 
 @Component({
@@ -17,10 +17,16 @@ import { CommonModule } from '@angular/common';
 export class ContactsComponent implements OnInit {
   selectedContact: Contact;
 
-  constructor() { }
+  constructor(private contactService: ContactService) { }
 
   ngOnInit() {
+    this.contactService.contactSelectedEvent.subscribe(
+      (contact: Contact) => {
+        this.selectedContact = contact;
+      }
+    );
   }
 
 
 }
+
