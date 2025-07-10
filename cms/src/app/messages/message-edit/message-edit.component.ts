@@ -1,13 +1,12 @@
 import { Component, ViewChild, ElementRef, Output, EventEmitter } from '@angular/core';
 import { Message } from '../message.model';
 import { MessageService } from '../message.service';
-import { Contact } from '../../contacts/contact.model';
 
 @Component({
   selector: 'app-message-edit',
-  standalone: true,
+  standalone: false,
   templateUrl: './message-edit.component.html',
-  styleUrl: './message-edit.component.css'
+  styleUrls: ['./message-edit.component.css']
 })
 export class MessageEditComponent {
   currentSender: string = '3'; // Example sender ID, replace with actual logic to get current user ID

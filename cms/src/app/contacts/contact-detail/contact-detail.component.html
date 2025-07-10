@@ -10,14 +10,17 @@
 
   <div class="col-xs-12 col-sm-6 text-sm-end mt-3 mt-sm-0">
     <div class="btn-group">
-      <button
+      <a
+        [routerLink]="['/contacts', contact?.id, 'edit']"
+        routerLinkActive="active"
         type="button"
         class="btn btn-primary dropdown-toggle">Edit
-      </button>
-      <button
+      </a>
+      <a
+        (click)="onDelete()"
         type="button"
         class="btn btn-primary dropdown-toggle btn-danger">Delete
-      </button>
+      </a>
     </div>
   </div>
 </div>

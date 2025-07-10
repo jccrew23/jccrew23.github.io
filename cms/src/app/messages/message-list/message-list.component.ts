@@ -1,14 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { Message } from '../message.model';
-import { MessageItemComponent } from '../message-item/message-item.component';
-import { MessageEditComponent } from '../message-edit/message-edit.component';
 import { MessageService } from '../message.service';
 
 @Component({
   selector: 'app-message-list',
-  standalone: true,
-  imports: [MessageItemComponent, MessageEditComponent, CommonModule],
+  standalone: false,
   templateUrl: './message-list.component.html',
   styleUrl: './message-list.component.css'
 })

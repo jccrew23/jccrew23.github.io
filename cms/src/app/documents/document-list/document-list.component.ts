@@ -1,15 +1,12 @@
 import { Component, Output, EventEmitter } from '@angular/core';
 import { Document } from '../document.model';
-import { DocumentItemComponent } from '../document-item/document-item.component';
-import { CommonModule } from '@angular/common';
 import { DocumentService } from '../document.service';
 
 @Component({
   selector: 'app-document-list',
-  standalone: true,
+  standalone: false,
   templateUrl: './document-list.component.html',
   styleUrls: ['./document-list.component.css'],
-  imports: [DocumentItemComponent, CommonModule]
 })
 export class DocumentListComponent {
 
@@ -19,9 +16,14 @@ export class DocumentListComponent {
 
   ngOnInit() {
     this.documents = this.documentService.getDocuments();
+
+    this.documentService.documentChangedEvent.subscribe(
+      (documents: Document[]) => {
+        this.documents = documents;
+      }
+    );
   }
 
-  onSelectedDocument(document: Document) {
-    this.documentService.documentSelectedEvent.emit(document);
-  }
+
+
 }

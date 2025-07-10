@@ -7,9 +7,9 @@
   <div class="row">
     <div class="col-xs-12">
       <app-contact-item
-        *ngFor="let contactEl of contacts"
+        *ngFor="let contactEl of contacts; let i= index"
         [contact] ="contactEl"
-        (contactSelected)="onSelected(contactEl)">
+        >
       </app-contact-item>
     </div>
   </div>

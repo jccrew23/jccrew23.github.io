@@ -3,17 +3,15 @@ import { Document } from '../document.model';
 
 @Component({
   selector: 'app-document-item',
-  standalone: true,
+  standalone: false,
   templateUrl: './document-item.component.html',
   styleUrls: ['./document-item.component.css']
-  // imports: [DocumentListComponent]
 })
 
 export class DocumentItemComponent {
   @Input() document: Document;
-  @Output() selectedDocumentEvent = new EventEmitter<Document>();
+  @Input() index: number;
 
-  onSelected() {
-    this.selectedDocumentEvent.emit(this.document);
-  }
+
+
 }
