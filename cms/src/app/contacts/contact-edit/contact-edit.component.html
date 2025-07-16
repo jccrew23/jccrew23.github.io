@@ -1,1 +1,150 @@
-<p>contact-edit works!</p>
+<div class="panel panel-default">
+  <div class="panel-body">
+    <form
+      id="contact-edit"
+      (ngSubmit)="onSubmit(f)"
+      #f="ngForm"
+      class="form-horizontal"
+    >
+      <div class="row">
+        <div class="col-sm-12 form-group">
+          <label for="name">Name:</label>
+          <input
+            type="text"
+            name="name"
+            id="name"
+            class="form-control required"
+            size="120"
+            max="120"
+            [(ngModel)]="contact.name"
+            #nameInput="ngModel"
+            required
+          />
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-sm-12 form-group">
+          <label for="email">Email:</label>
+          <input
+            type="text"
+            id="email"
+            name="email"
+            class="form-control required"
+            size="120"
+            max="255"
+            [(ngModel)]="contact.email"
+            #emailInput="ngModel"
+            required
+            pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$"
+          />
+        </div>
+      </div>
+
+      <div
+        *ngIf="emailInput.invalid && emailInput.touched"
+        class="alert alert-danger"
+      >
+        <p>Enter a valid Email address</p>
+      </div>
+
+      <div class="row">
+        <div class="col-sm-12 form-group">
+          <label for="phone">Phone:</label>
+          <input
+            type="text"
+            id="phone"
+            name="phone"
+            class="form-control invalid"
+            size="150"
+            max="255"
+            [(ngModel)]="contact.phone"
+            #phoneInput="ngModel"
+            pattern="\D*([2-9]\d{2})(\D*)([2-9]\d{2})(\D*)(\d{4})\D*"
+            required
+          />
+        </div>
+      </div>
+
+      <div
+        *ngIf="phoneInput.invalid && phoneInput.touched"
+        class="alert alert-danger"
+      >
+        <p>Enter a valid Phone number</p>
+      </div>
+
+      <div class="row">
+        <div class="col-sm-12 form-group">
+          <label for="imageUrl">Image URL:</label>
+          <input
+            type="text"
+            id="imageUrl"
+            name="imageUrl"
+            class="form-control"
+            size="150"
+            max="255"
+            [(ngModel)]="contact.imageUrl"
+            #imageUrlInput="ngModel"
+          />
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="form-group col-sm-12">
+          <label for="groupList">Group contacts</label>
+
+          <div
+            cdkDropList
+            id="groupList"
+            (cdkDropListDropped)="onDrop($event)"
+            class="drag-list"
+          >
+            <div
+              *ngFor="let contact of groupContacts; let i = index"
+              cdkDrag
+              class="d-flex align-items-center mb-2"
+            >
+              <app-contact-item
+                class="col-sm-10"
+                [contact]="contact"
+              ></app-contact-item>
+              <button
+                type="button"
+                class="btn btn-danger col-sm-2"
+                (click)="onRemoveItem(i)"
+                title="Select to delete"
+              >
+                X
+              </button>
+            </div>
+
+            <span class="dragMsg text-muted" *ngIf="groupContacts?.length < 1">
+              Drag contacts in group here
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div
+        *ngIf="
+          (nameInput.invalid || emailInput.invalid) &&
+          (nameInput.touched || emailInput.touched)
+        "
+        class="alert alert-danger"
+      >
+        <p>The Name and Email are required fields.</p>
+      </div>
+
+      <div class="row">
+        <div class="col-xs-12 btn-toolbar">
+          <button class="btn btn-success" type="submit" [disabled]="f.invalid">
+            Save
+          </button>
+          <button class="btn btn-primary" type="button" (click)="onCancel()">
+            Cancel
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

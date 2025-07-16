@@ -47,6 +47,7 @@ export class DocumentService {
     this.documents.splice(pos, 1);
     const documentsListClone = this.documents.slice();
     this.documentListChangedEvent.next(documentsListClone);
+    this.documentChangedEvent.emit(this.documents.slice());
    }
 
    getMaxId(): number {

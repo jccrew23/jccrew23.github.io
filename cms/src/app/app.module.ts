@@ -1,7 +1,7 @@
 import { ContactDetailComponent } from './contacts/contact-detail/contact-detail.component';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { CommonModule } from '@angular/common'; 
+import { CommonModule } from '@angular/common';
 import { AppComponent } from './app.component';
 import { DocumentsComponent } from './documents/documents.component';
 import { MessageListComponent } from './messages/message-list/message-list.component';
@@ -19,6 +19,7 @@ import { MessageEditComponent } from './messages/message-edit/message-edit.compo
 import { MessageItemComponent } from './messages/message-item/message-item.component';
 import { DocumentEditComponent } from './documents/document-edit/document-edit.component';
 import { ContactEditComponent } from './contacts/contact-edit/contact-edit.component';
+import {DragDropModule} from '@angular/cdk/drag-drop';
 
 @NgModule({
   declarations: [
@@ -43,7 +44,8 @@ import { ContactEditComponent } from './contacts/contact-edit/contact-edit.compo
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    CommonModule
+    CommonModule,
+    DragDropModule
   ],
   providers: [],
   bootstrap: [AppComponent]
