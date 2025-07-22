@@ -2,13 +2,14 @@ import { Injectable, EventEmitter } from '@angular/core';
 import { Message } from './message.model';
 // import { MOCKMESSAGES } from './MOCKMESSAGES';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class MessageService {
   // emit event to notify components of changes
-  messageChangedEvent = new EventEmitter<Message[]>();
+  messageChangedEvent = new Subject<Message[]>();
 
   messages: Message[] = [];
   maxMessageId: number;
@@ -17,12 +18,28 @@ export class MessageService {
   constructor(private http: HttpClient) {}
 
   getMessages() {
-    this.http.get<Message[]>(this.url).subscribe(
-      (messages: Message[]) => {
-        this.messages = messages;
+    this.http.get<any>(this.url).subscribe(
+      (messagesData: any) => {
+        console.log('Raw messages data from Firebase:', messagesData);
+
+        if (messagesData) {
+          // Convert Firebase object to array
+          this.messages = Object.keys(messagesData).map(key => {
+            const message = messagesData[key];
+            // Ensure the message has an id property
+            if (!message.id) {
+              message.id = key;
+            }
+            return message;
+          });
+        } else {
+          this.messages = [];
+        }
+
+        console.log('Processed messages array:', this.messages);
         this.maxMessageId = this.getMaxId();
         this.messages.sort((a, b) => a.subject.localeCompare(b.subject));
-        this.messageChangedEvent.emit(this.messages.slice());
+        this.messageChangedEvent.next(this.messages.slice());
       },
       (error: any) => {
         console.error('Error fetching messages:', error);
@@ -64,7 +81,7 @@ export class MessageService {
     const messages = JSON.stringify(this.messages);
     this.http.put(this.url, messages, { headers: headers }).subscribe(
       () => {
-        this.messageChangedEvent.emit(this.messages.slice());
+        this.messageChangedEvent.next(this.messages.slice());
       },
       (error: any) => {
         console.error('Error storing messages:', error);

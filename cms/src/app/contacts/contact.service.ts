@@ -27,9 +27,25 @@ export class ContactService {
   }
 
   getContacts() {
-    this.http.get<Contact[]>(this.url).subscribe(
-      (contacts: Contact[]) => {
-        this.contacts = contacts;
+    this.http.get<any>(this.url).subscribe(
+      (contactsData: any) => {
+        console.log('Raw contacts data from Firebase:', contactsData);
+        
+        if (contactsData) {
+          // Convert Firebase object to array
+          this.contacts = Object.keys(contactsData).map(key => {
+            const contact = contactsData[key];
+            // Ensure the contact has an id property
+            if (!contact.id) {
+              contact.id = key;
+            }
+            return contact;
+          });
+        } else {
+          this.contacts = [];
+        }
+        
+        console.log('Processed contacts array:', this.contacts);
         this.maxContactId = this.getMaxId();
         this.contacts.sort((a, b) => a.name.localeCompare(b.name));
         this.contactListChangedEvent.next(this.contacts.slice());

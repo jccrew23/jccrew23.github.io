@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { ContactService } from './contacts/contact.service';
 
 @Component({
   selector: 'app-root',
@@ -6,8 +7,15 @@ import { Component } from '@angular/core';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   title = 'cms';
+
+  constructor(private contactService: ContactService) {}
+
+  ngOnInit() {
+    // Load contacts when the app starts so they're available everywhere
+    this.contactService.getContacts();
+  }
 }
 
 
