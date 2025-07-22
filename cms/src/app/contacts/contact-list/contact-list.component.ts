@@ -11,18 +11,23 @@ import { ContactService } from '../contact.service';
 export class ContactListComponent implements OnInit {
 
   contacts: Contact[] = [];
+  term: string;
 
   constructor(private contactService: ContactService) {
   }
 
   ngOnInit() {
-    this.contacts = this.contactService.getContacts();
-
-    this.contactService.contactChangedEvent.subscribe(
+    this.contactService.contactListChangedEvent.subscribe(
       (contacts: Contact[]) => {
         this.contacts = contacts;
       }
     );
+
+    this.contactService.getContacts();
+  }
+
+  search(value:string) {
+    this.term = value;
   }
 
 }

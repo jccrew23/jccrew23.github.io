@@ -1,5 +1,8 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { Document } from '../document.model';
+import { Router } from '@angular/router';
+import { NgModule } from '@angular/core';
+
 
 @Component({
   selector: 'app-document-item',
