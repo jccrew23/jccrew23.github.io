@@ -30,7 +30,7 @@ export class ContactService {
     this.http.get<any>(this.url).subscribe(
       (contactsData: any) => {
         console.log('Raw contacts data from Firebase:', contactsData);
-        
+
         if (contactsData) {
           // Convert Firebase object to array
           this.contacts = Object.keys(contactsData).map(key => {
@@ -44,7 +44,7 @@ export class ContactService {
         } else {
           this.contacts = [];
         }
-        
+
         console.log('Processed contacts array:', this.contacts);
         this.maxContactId = this.getMaxId();
         this.contacts.sort((a, b) => a.name.localeCompare(b.name));
