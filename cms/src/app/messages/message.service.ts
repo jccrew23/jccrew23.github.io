@@ -59,10 +59,25 @@ export class MessageService {
   addMessage(message: Message) {
     if (!message) return;
 
-    this.maxMessageId++;
-    message.id = this.maxMessageId.toString();
-    this.messages.push(message);
-    this.storeMessages();
+    message.id = '';
+
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+
+    this.http.post<{ name: string }>(this.url, message, { headers: headers }).subscribe(
+      (responseData) => {
+        message.id = responseData.name;
+        this.messages.push(message);
+        this.sortAndSend();
+      },
+      (error: any) => {
+        console.error('Error adding message:', error);
+      }
+    );
+  }
+
+  private sortAndSend() {
+    this.messages.sort((a, b) => a.subject.localeCompare(b.subject));
+    this.messageChangedEvent.next(this.messages.slice());
   }
 
   getMaxId(): number {

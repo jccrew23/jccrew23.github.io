@@ -5,6 +5,7 @@ export class Contact {
     public email: string,
     public phone: string,
     public imageUrl: string,
-    public group?: Contact[] // optional group of related contacts
+    public group?: Contact[], // optional group of related contacts
+    public _id?: string // optional MongoDB ID
   ) {}
 }

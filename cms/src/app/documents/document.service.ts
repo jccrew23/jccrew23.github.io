@@ -8,26 +8,32 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 })
 export class DocumentService {
   documents: Document[] = [];
-  private url = 'https://cmsbyui25-default-rtdb.firebaseio.com/documents.json';
+
+  private url = 'http://localhost:3000/documents';
 
   // Event emitter to notify when a document is selected
   documentSelectedEvent = new EventEmitter<Document>();
   documentChangedEvent = new EventEmitter<Document[]>();
   documentListChangedEvent = new Subject<Document[]>();
 
-  maxDocumentId: number;
-
-  constructor(private http: HttpClient) {
-    this.maxDocumentId = this.getMaxId();
-  }
+  constructor(private http: HttpClient) {}
 
   getDocuments() {
-    this.http.get<Document[]>(this.url).subscribe(
-      (documents: Document[]) => {
-        this.documents = documents;
-        this.maxDocumentId = this.getMaxId();
-        this.documents.sort((a, b) => a.name.localeCompare(b.name));
-        this.documentListChangedEvent.next(this.documents.slice());
+    this.http.get<any>(this.url).subscribe(
+      (response) => {
+        console.log('Raw server response:', response);
+
+        // Check if response has the expected structure
+        if (response && response.obj) {
+          this.documents = response.obj || [];
+        } else if (Array.isArray(response)) {
+          this.documents = response;
+        } else {
+          this.documents = [];
+        }
+
+        console.log('Processed documents array:', this.documents);
+        this.sortAndSend();
       },
       (error: any) => {
         console.error('Error fetching documents:', error);
@@ -48,12 +54,20 @@ export class DocumentService {
     if (!document) {
       return;
     }
-    const pos = this.documents.indexOf(document);
+    const pos = this.documents.findIndex(d => d.id === document.id);
     if (pos < 0) {
       return;
     }
-    this.documents.splice(pos, 1);
-    this.storeDocuments();
+
+    this.http.delete(`${this.url}/${document.id}`).subscribe(
+      (response: Response) => {
+        this.documents.splice(pos, 1);
+        this.sortAndSend();
+      },
+      (error) => {
+        console.error('Error deleting document:', error);
+      }
+    );
   }
 
   getMaxId(): number {
@@ -66,15 +80,38 @@ export class DocumentService {
     }
     return maxId;
   }
+  private sortAndSend() {
+    // Add safety check for sorting
+    this.documents = this.documents.filter(document => document && document.name);
+    this.documents.sort((a, b) => {
+      const nameA = a.name || '';
+      const nameB = b.name || '';
+      return nameA.localeCompare(nameB);
+    });
+    this.documentListChangedEvent.next(this.documents.slice());
+  }
 
-  addDocument(newDocument: Document) {
-    if (!newDocument) {
+  addDocument(document: Document) {
+    if (!document) {
       return;
     }
-    this.maxDocumentId++;
-    newDocument.id = this.maxDocumentId.toString();
-    this.documents.push(newDocument);
-    this.storeDocuments();
+    document.id = '';
+
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+
+    console.log('Adding document:', document);
+
+    this.http.post<{message:string, obj: Document}>(this.url, document, { headers: headers })
+      .subscribe(
+        (responseData) => {
+          console.log('Document added successfully:', responseData);
+          this.documents.push(responseData.obj);  // Changed from responseData.document to responseData.obj
+          this.sortAndSend();
+        },
+        (error) => {
+          console.error('Error adding document:', error);
+        }
+      );
 
   }
 
@@ -82,13 +119,25 @@ export class DocumentService {
     if (!originalDocument || !newDocument) {
       return;
     }
-    const pos = this.documents.indexOf(originalDocument);
+    const pos = this.documents.findIndex(d => d.id === originalDocument.id);
     if (pos < 0) {
       return;
     }
     newDocument.id = originalDocument.id;
-    this.documents[pos] = newDocument;
-    this.storeDocuments();
+    newDocument._id = originalDocument._id;
+
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+
+    this.http.put<{message:string, obj: Document}>(`${this.url}/${originalDocument.id}`, newDocument, { headers: headers })
+      .subscribe(
+        (responseData) => {
+          this.documents[pos] = responseData.obj;  // Changed from responseData.document to responseData.obj
+          this.sortAndSend();
+        },
+        (error) => {
+          console.error('Error updating document:', error);
+        }
+      );
   }
 
   storeDocuments(){
