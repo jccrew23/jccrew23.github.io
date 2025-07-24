@@ -50,7 +50,7 @@ app.use('/contacts', contactsRoute);
 app.use('/documents', documentsRoute);
 
 // establish a connection to the mongo database
-mongoose.connect('mongodb+srv://jcdbUser:cms07232025@cms.12bjpza.mongodb.net/?retryWrites=true&w=majority&appName=CMS',
+mongoose.connect('mongodb+srv://jcdbUser:***********@cms.12bjpza.mongodb.net/?retryWrites=true&w=majority&appName=CMS',
    { useNewUrlParser: true })
    .then(() => {
       console.log('Connected to database!');
